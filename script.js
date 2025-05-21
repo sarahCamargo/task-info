@@ -12,6 +12,20 @@ function toggleFeatureField() {
   }
 }
 
+function showCommitInfo() {
+  const isGeraCommitDesc = document.getElementById("geraCommitDesc").checked;
+  const container = document.getElementById("commitInputContainer");
+
+  if (isGeraCommitDesc) {
+    container.innerHTML = `
+      <label for="propMelhoria" class="form-label">Proposta de Melhoria</label>
+      <textarea rows="5" id="propMelhoria" name="propMelhoria" class="form-control" />
+    `;
+  } else {
+    container.innerHTML = "";
+  }
+}
+
 function submitForm(event) {
   event.preventDefault();
   const form = event.target;
@@ -21,13 +35,17 @@ function submitForm(event) {
   const featCod = formData.get("featCod");
   const usDesc = formData.get("usDesc");
   const taskType = formData.get("taskType");
+  const isGeraCommitDesc = formData.get("geraCommitDesc") !== null;
+  const propMelhoria = formData.get("propMelhoria");
 
   if (!usCod) alert("Informe um código válido.");
   if (!usDesc) alert("Informe uma descrição válida.");
   if (taskType == null) alert("Informe o tipo da task.");
   if (taskType == "feature" && !featCod) alert("Informe um código válido.");
+  if (isGeraCommitDesc && !propMelhoria)
+    alert("Informe uma proposta de melhoria válida.");
 
-  const mensagem = `PR ${capitalize(taskType)} - ${usDesc}`;
+  const mensagem = `PR ${capitalize(taskType)} ${usCod} - ${usDesc}`;
   document.getElementById("mensagem").textContent = mensagem;
 
   let taskBranch = "";
@@ -46,6 +64,10 @@ function submitForm(event) {
   document.getElementById("featureBranch").textContent = featureBranch;
   document.getElementById("taskBranch").textContent = taskBranch;
   document.getElementById("resposta").style.display = "block";
+
+  if (isGeraCommitDesc) {
+    gerarCommitDescricao(usCod, propMelhoria);
+  }
 }
 
 function capitalize(str) {
@@ -60,7 +82,27 @@ function getBranchNameFormatted(desc) {
 }
 
 function copiarElemento(id) {
-  const texto = document.getElementById(id).textContent;
+  let texto = document.getElementById(id).textContent;
+
+  texto = texto.replace(/<br\s*\/?>/gi, "\n").trim();
 
   navigator.clipboard.writeText(texto);
+}
+
+function gerarCommitDescricao(usCod, propMelhoria) {
+  let desc = `
+<br>Antes de submeter o PR, tenha certeza que:<br><br>
+
+- [X] O build do código é feito sem erros ou warnings<br>
+- [X] O código está formatado e nos padrões de clean code<br>
+- [X] Toda a funcionalidade desenvolvida foi devidamente testada.<br><br>
+
+# Proposta de Melhoria<br>
+${propMelhoria}<br><br>
+
+# Link da Task com Evidências<br>
+#${usCod}`;
+
+  document.getElementById("commitDesc").innerHTML = desc;
+  document.getElementById("commit").style.display = "block";
 }
