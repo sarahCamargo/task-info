@@ -34,7 +34,9 @@ function submitForm(event) {
   let featureBranch = "";
 
   if (taskType == "feature" && featCod != null) {
-    taskBranch = `features/${featCod}/task/${usCod}_${getBranchNameFormatted(usDesc)}`;
+    taskBranch = `features/${featCod}/task/${usCod}_${getBranchNameFormatted(
+      usDesc
+    )}`;
     featureBranch = `features/${featCod}/developer`;
   } else {
     taskBranch = `hotfix/${usCod}_${getBranchNameFormatted(usDesc)}`;
@@ -55,4 +57,10 @@ function getBranchNameFormatted(desc) {
     .replace(/\s+/g, "_")
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "");
+}
+
+function copiarElemento(id) {
+  const texto = document.getElementById(id).textContent;
+
+  navigator.clipboard.writeText(texto);
 }

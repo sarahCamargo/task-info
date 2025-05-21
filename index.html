@@ -70,13 +70,41 @@
               </form>
 
               <div id="resposta" class="mt-4" style="display: none">
-                <p><strong>Mensagem Commit:</strong> <span id="mensagem"></span></p>
-                <p>
-                  <strong>Feature Branch:</strong>
-                  <span id="featureBranch"></span>
+                <p class="d-flex justify-content-between align-items-center">
+                  <span>
+                    <strong>Mensagem Commit:</strong>
+                    <span id="mensagem"></span>
+                  </span>
+                  <button
+                    class="btn btn-sm btn-outline-secondary"
+                    onclick="copiarElemento('mensagem')"
+                  >
+                    Copiar
+                  </button>
                 </p>
-                <p>
-                  <strong>Task Branch:</strong> <span id="taskBranch"></span>
+                <p class="d-flex justify-content-between align-items-center">
+                  <span>
+                    <strong>Feature Branch:</strong>
+                    <span id="featureBranch"></span>
+                  </span>
+                  <button
+                    class="btn btn-sm btn-outline-secondary"
+                    onclick="copiarElemento('featureBranch')"
+                  >
+                    Copiar
+                  </button>
+                </p>
+                <p class="d-flex justify-content-between align-items-center">
+                  <span>
+                    <strong>Task Branch:</strong>
+                    <span id="taskBranch"></span>
+                  </span>
+                  <button
+                    class="btn btn-sm btn-outline-secondary"
+                    onclick="copiarElemento('taskBranch')"
+                  >
+                    Copiar
+                  </button>
                 </p>
               </div>
             </div>
