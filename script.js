@@ -38,16 +38,29 @@ function submitForm(event) {
   const isGeraCommitDesc = formData.get("geraCommitDesc") !== null;
   const propMelhoria = formData.get("propMelhoria");
 
-  if (!usCod) alert("Informe um código válido.");
-  if (!usDesc) alert("Informe uma descrição válida.");
-  if (taskType == null) alert("Informe o tipo da task.");
-  if (taskType == "feature" && !featCod) alert("Informe um código válido.");
-  if (isGeraCommitDesc && !propMelhoria)
-    alert("Informe uma proposta de melhoria válida.");
+  let error = hasErros(usCod, featCod, usDesc, taskType, isGeraCommitDesc, propMelhoria);
 
+  if (error) {
+    alert(error);
+    return;
+  }
+
+  setMensagem(taskType, usCod, usDesc);
+  setTaskAndFeatBranch(featCod, usCod, usDesc, taskType);
+
+  document.getElementById("resposta").style.display = "block";
+
+  if (isGeraCommitDesc) {
+    gerarCommitDescricao(usCod, propMelhoria);
+  }
+}
+
+function setMensagem(taskType, usCod, usDesc) {
   const mensagem = `PR ${capitalize(taskType)} ${usCod} - ${usDesc}`;
   document.getElementById("mensagem").textContent = mensagem;
+}
 
+function setTaskAndFeatBranch(featCod, usCod, usDesc, taskType) {
   let taskBranch = "";
   let featureBranch = "";
 
@@ -63,11 +76,15 @@ function submitForm(event) {
 
   document.getElementById("featureBranch").textContent = featureBranch;
   document.getElementById("taskBranch").textContent = taskBranch;
-  document.getElementById("resposta").style.display = "block";
+}
 
-  if (isGeraCommitDesc) {
-    gerarCommitDescricao(usCod, propMelhoria);
-  }
+function hasErros(usCod, featCod, usDesc, taskType, isGeraCommitDesc, propMelhoria) {
+  if (!usCod) return "Informe um código válido.";
+  if (!usDesc) return "Informe uma descrição válida.";
+  if (taskType == null) return "Informe o tipo da task.";
+  if (taskType == "feature" && !featCod) return "Informe um código válido.";
+  if (isGeraCommitDesc && !propMelhoria)
+    return "Informe uma proposta de melhoria válida.";
 }
 
 function capitalize(str) {
